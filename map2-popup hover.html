@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>mediCuba projekte</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <style>
+    body { margin: 0; }
+    #map { height: 100vh; }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+
+// Границы Кубы (примерные)
+const bounds = [
+  [19.5, -85.0], // юго-запад
+  [23.5, -73.5]  // северо-восток
+];
+
+// КАРТА
+var map = L.map('map', {
+  maxBounds: bounds,
+  maxBoundsViscosity: 1.0 // "резиновый" эффект, нельзя выйти за границы
+}).setView([21.5, -79.5], 6);
+
+// Слой карты
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+// 1.ДАННЫЕ ПРОЕКТОВ ---
+const projects = [
+ {
+    name: "Integrale Behandlung von neurologischen Entwicklungsstörungen",
+    coords: [23.136227937804804, -82.37289650280003],
+    link: "https://medicuba.ch/de/integrale-behandlung-von-neurologischen-entwicklungsstoerungen-phase-2",
+    category: "ped",
+    period: "2017-2021",  // 2017-2021 or 2020–heute
+    active: false  // true or false
+  },
+{
+    name: "Integrale Behandlung von neurologischen Entwicklungsstörungen",
+    coords: [23.038850603682725, -81.52185336398337],
+    link: "https://medicuba.ch/de/integrale-behandlung-von-neurologischen-entwicklungsstoerungen-phase-2",
+    category: "ped",
+    period: "2017-2021",  // 2017-2021 or 2020–heute
+    active: false  // true or false
+  },
+{
+    name: "Integrale Behandlung von neurologischen Entwicklungsstörungen",
+    coords: [22.421515017793652, -79.93315704605911],
+    link: "https://medicuba.ch/de/integrale-behandlung-von-neurologischen-entwicklungsstoerungen-phase-2",
+    category: "ped",
+    period: "2017-2021",  // 2017-2021 or 2020–heute
+    active: false  // true or false
+  },
+{
+    name: "Integrale Behandlung von neurologischen Entwicklungsstörungen",
+    coords: [20.026574955466543, -75.83537120466016],
+    link: "https://medicuba.ch/de/integrale-behandlung-von-neurologischen-entwicklungsstoerungen-phase-2",
+    category: "ped",
+    period: "2017-2021",  // 2017-2021 or 2020–heute
+    active: false  // true or false
+  },
+{
+    name: "Mikrovaskuläre Rekonstruktion von chirurgischen Defekten bei Patienten mit Kopf-Hals-Tumoren",
+    coords: [23.132033369529577, -82.38714315734289], //Havanna(INOR)
+    link: "https://medicuba.ch/de/mikrovaskulaere-rekonstruktion-von-chirurgischen-defekten-bei-patienten-mit-kopf-hals-tumoren",
+    category: "chronische",
+    period: "2024 - 2029",  // 2017-2021 or 2020–heute
+    active: true  // true or false
+  },
+{
+    name: "Verstärkung der kombinierten Massnahmen zur HIV-Prävention und zur Eliminierung der Mutter-Kind Übertragung von HIV/AIDS",
+    coords: [23.047365818810803, -81.58908094940064], //Provinzen Matanzas
+    link: "https://medicuba.ch/de/verstaerkung-der-kombinierten-massnahmen-zur-hiv-praevention-und-zur-eliminierung-der-mutter-kind-uebertragung-von-hiv-aids-und-angeborener-syphilis-2022-2026",
+    category: "ansteckende",
+    period: "2022 - 2026",  // 2017-2021 or 2020–heute
+    active: true  // true or false
+  },
+{
+    name: "Verstärkung der kombinierten Massnahmen zur HIV-Prävention und zur Eliminierung der Mutter-Kind Übertragung von HIV/AIDS",
+    coords: [22.135923379307766, -80.4375780412361], //Cienfuegos
+    link: "https://medicuba.ch/de/verstaerkung-der-kombinierten-massnahmen-zur-hiv-praevention-und-zur-eliminierung-der-mutter-kind-uebertragung-von-hiv-aids-und-angeborener-syphilis-2022-2026",
+    category: "ansteckende",
+    period: "2022 - 2026",  // 2017-2021 or 2020–heute
+    active: true  // true or false
+  },
+{
+    name: "Verstärkung der kombinierten Massnahmen zur HIV-Prävention und zur Eliminierung der Mutter-Kind Übertragung von HIV/AIDS",
+    coords: [21.937460762837443, -79.43519892151606], //Sancti Spiritus
+    link: "https://medicuba.ch/de/verstaerkung-der-kombinierten-massnahmen-zur-hiv-praevention-und-zur-eliminierung-der-mutter-kind-uebertragung-von-hiv-aids-und-angeborener-syphilis-2022-2026",
+    category: "ansteckende",
+    period: "2022 - 2026",  // 2017-2021 or 2020–heute
+    active: true  // true or false
+  },
+{
+    name: "Prävention und Früherkennung von altersbedingter Demenz und Gebrechlichkeit",
+    coords: [23.134914040417208, -82.38411426625467], //Havanna
+    link: "https://medicuba.ch/de/altersmedizin-praevention-und-frueherkennung-von-altersbedingter-demenz-und-gebrechlichkeit",
+    category: "geriatrie",
+    period: "2015 - heute",  // 2017-2021 or 2020–heute
+    active: true  // true or false
+  },
+{
+    name: "Gesundheit im Alter Sensibilisierung und Prävention im Zusammenhang mit altersbedingten Erkrankungen auf dem Land",
+    coords: [22.726590430495023, -80.89409379850512], //Colón (Provinz Matanzas)
+    link: "https://medicuba.ch/de/gesundheit-im-alter-sensibilisierung-und-praevention-im-zusammenhang-mit-altersbedingten-erkrankungen-auf-dem-land-fortam",
+    category: "geriatrie",
+    period: "2017 - 2021",  // 2017-2021 or 2020–heute
+    active: false  // true or false
+  }
+];
+
+// 2. ФУНКЦИЯ ИКОНОК (вставляешь сюда)
+function getMarkerIcon(category, active) {
+
+  const colors = {
+    ped: "#52A702", // Pädiatrie
+    chronische: "#F234C6", // Chronische und nicht übertragbare Krankheiten
+    geriatrie: "#EBB763", // Geriatrie
+    ansteckende: "#CC4B05", // Übertragbare und ansteckende Krankheiten
+    bildung: "#0297AA", // Medizinische Aus- und Weiterbildung, internationale Vernetzung
+	weitere: "#9903CB" // Weitere Projekte & Kooperationen
+  };
+
+  const color = colors[category] || "#333";
+
+  return L.divIcon({
+    className: "custom-marker",
+    html: `
+      <div style="
+        width: 16px;
+        height: 16px;
+        background: ${color};
+        border-radius: 50%;
+        //border: ${active ? "1px solid white" : "1px dashed white"};
+        opacity: ${active ? 1 : 0.4};
+      "></div>
+    `
+  });
+}
+
+// 3. МАРКЕРЫ
+projects.forEach(project => {
+
+  const marker = L.marker(project.coords, {
+    icon: getMarkerIcon(project.category, project.active)
+  }).addTo(map);
+
+  const popupContent = `
+    <div class="popup-content">
+      <b>${project.name}</b><br>
+      <small>${project.period}</small><br>
+      <a href="${project.link}" target="_blank" rel="noopener noreferrer">
+  Mehr erfahren
+</a>
+    </div>
+  `;
+
+  marker.bindPopup(popupContent);
+
+  let isCursorOnPopup = false;
+
+  marker.on('mouseover', function () {
+    this.openPopup();
+  });
+
+  marker.on('mouseout', function () {
+    setTimeout(() => {
+      if (!isCursorOnPopup) {
+        this.closePopup();
+      }
+    }, 200);
+  });
+
+  // 👉 ключевая часть — отслеживаем сам попап
+  marker.on('popupopen', function () {
+    const popupEl = document.querySelector('.leaflet-popup');
+
+    if (!popupEl) return;
+
+    popupEl.addEventListener('mouseenter', () => {
+      isCursorOnPopup = true;
+    });
+
+    popupEl.addEventListener('mouseleave', () => {
+      isCursorOnPopup = false;
+      marker.closePopup();
+    });
+  });
+
+});
+
+</script>
+
+</body>
+</html>
