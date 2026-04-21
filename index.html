@@ -5,17 +5,46 @@
   <title>mediCuba projekte</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css">
 
   <style>
     body { margin: 0; }
-    #map { height: 100vh; }
+    #map {
+    width: 100%;
+    max-width: 1920px;
+    aspect-ratio: 1920 / 670;
+    margin: 0 auto;
+    border-radius: 12px;
+  }
+
+  .map-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+  }
+  
+  .marker-cluster {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.marker-cluster div {
+  background-color: #0297AA;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+}
   </style>
 </head>
 <body>
 
-<div id="map"></div>
+<div class="map-wrapper">
+  <div id="map"></div>
+</div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 <script>
 
 // Границы Кубы (примерные)
@@ -26,14 +55,22 @@ const bounds = [
 
 // КАРТА
 var map = L.map('map', {
+  zoomSnap: 0.25,
+  minZoom: 7.4,
+  maxZoom: 15,
   maxBounds: bounds,
-  maxBoundsViscosity: 1.0 // "резиновый" эффект, нельзя выйти за границы
+  maxBoundsViscosity: 1.0
 }).setView([21.5, -79.5], 6);
+
+window.addEventListener('resize', () => {
+  map.invalidateSize();
+});
 
 // Слой карты
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; OpenStreetMap'
 }).addTo(map);
+const markers = L.markerClusterGroup();
 
 // 1.ДАННЫЕ ПРОЕКТОВ ---
 const projects = [
@@ -116,10 +153,88 @@ const projects = [
     category: "geriatrie",
     period: "2017 - 2021",  // 2017-2021 or 2020–heute
     active: false  // true or false
+  },
+   {
+    name: "Endoskopische Multiportal-Neurochirurgie: Eine 360°-Ansicht der Schädelbasis",
+    coords: [23.139452326905474, -82.37010640834526], //Havanna
+    link: "https://medicuba.ch/de/endoskopische-multiportal-neurochirurgie-eine-360-ansicht-der-schaedelbasis",
+    category: "chronische",
+    period: "2020 - 2023",  // 2017-2021 or 2020–heute
+    active: false  // true or false
+  },
+{
+    name: "Ausbau der Ressourcen für das nationale Krebsregister RNC",
+    coords: [23.13201036332936, -82.38614082415505], //Havanna
+    link: "https://medicuba.ch/de/ausbau-der-ressourcen-fuer-das-nationale-krebsregisger-rnc",
+    category: "chronische",
+    period: "2007 - 2013",  // 2017-2021 or 2020–heute
+    active: false  // true or false
+  },
+{
+    name: "Revitalisierung der Chirurgie im Kopf-Hals-Bereich (HNO) am INOR",
+    coords: [23.135118162148505, -82.38264208093113], //Havanna
+    link: "https://medicuba.ch/de/revitalisierung-der-chirurgie-im-kopf-hals-bereich-hno-am-inor",
+    category: "chronische",
+    period: "2018 - 2020",  // 2017-2021 or 2020–heute
+    active: false  // true or false
+  },
+  {
+    name: "Ausrüstung für das Schulungslabor am Departement Pharmakologie der Universität Santiago",
+    coords: [20.043746350613475, -75.8163667514458], //Santiago
+    link: "https://medicuba.ch/de/ausruestung-fuer-das-schulungslabor-am-departement-pharmakologie-der-universitaet-santiago",
+    category: "bildung",
+    period: "2015 - heute",  // 2017-2021 or 2020–heute
+    active: true  // true or false
+  },
+{
+    name: "Schweizer StudentInnen in Kuba",
+    coords: [23.13940975370374, -82.37072986474054], //Havanna
+    link: "https://medicuba.ch/de/schweizer-studentinnen-in-kuba",
+    category: "bildung",
+    period: "2012",  // 2017-2021 or 2020–heute
+    active: false  // true or false
+  },
+  {
+    name: "Quartierarbeit in Atarés, Cerro/Havanna",
+    coords: [23.10432434129989, -82.36458101353752], //Havanna
+    link: "https://medicuba.ch/de/quartierarbeit-in-atares-cerro-havanna",
+    category: "weitere",
+    period: "2000 - heute",  // 2017-2021 or 2020–heute
+    active: true  // true or false
+  },
+{
+    name: "Sonderprojekt Santiago",
+    coords: [20.29550256181263, -76.2544279844072], //Santiago
+    link: "https://medicuba.ch/de/sonderprojekt-santiago",
+    category: "weitere",
+    period: "2015",  // 2017-2021 or 2020–heute
+    active: false  // true or false
+  },
+  {
+    name: "Virenmonitoring bei Organtransplantationen an Erwachsenen, IPK",
+    coords: [23.03585425870488, -82.47664606563139], //Havanna
+    link: "https://medicuba.ch/de/virenmonitoring-bei-organtransplantationen-an-erwachsenen-ipk",
+    category: "weitere",
+    period: "2015",  // 2017-2021 or 2020–heute
+    active: false  // true or false
+  },
+{
+    name: "Entwicklung der Grünen und Traditionellen Medizin in der Provinz Granma",
+    coords: [20.36538856165171, -76.65926560170415], //Granma
+    link: "https://medicuba.ch/de/entwicklung-der-gruenen-und-traditionellen-medizin-in-der-provinz-granma",
+    category: "weitere",
+    period: "2004 - 2010",  // 2017-2021 or 2020–heute
+    active: false  // true or false
   }
 ];
+const world = [
+  [90, -180],
+  [90, 180],
+  [-90, 180],
+  [-90, -180]
+];
 
-// 2. ФУНКЦИЯ ИКОНОК 
+// 2. ФУНКЦИЯ ИКОНОК
 function getMarkerIcon(category, active) {
 
   const colors = {
@@ -141,7 +256,6 @@ function getMarkerIcon(category, active) {
         height: 16px;
         background: ${color};
         border-radius: 50%;
-        //border: ${active ? "1px solid white" : "1px dashed white"};
         opacity: ${active ? 1 : 0.4};
       "></div>
     `
@@ -153,15 +267,15 @@ projects.forEach(project => {
 
   const marker = L.marker(project.coords, {
     icon: getMarkerIcon(project.category, project.active)
-  }).addTo(map);
+  });
 
   const popupContent = `
     <div class="popup-content">
       <b>${project.name}</b><br>
       <small>${project.period}</small><br>
       <a href="${project.link}" target="_blank" rel="noopener noreferrer">
-  Mehr erfahren
-</a>
+        Mehr erfahren
+      </a>
     </div>
   `;
 
@@ -181,7 +295,6 @@ projects.forEach(project => {
     }, 200);
   });
 
-  //отслеживаем сам попап
   marker.on('popupopen', function () {
     const popupEl = document.querySelector('.leaflet-popup');
 
@@ -197,7 +310,13 @@ projects.forEach(project => {
     });
   });
 
+  //добавляем в кластер, а не на карту
+  markers.addLayer(marker);
+
 });
+
+//добавляем кластер на карту
+map.addLayer(markers);
 
 </script>
 
