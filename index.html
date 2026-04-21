@@ -119,7 +119,7 @@ const projects = [
   }
 ];
 
-// 2. ФУНКЦИЯ ИКОНОК (вставляешь сюда)
+// 2. ФУНКЦИЯ ИКОНОК 
 function getMarkerIcon(category, active) {
 
   const colors = {
@@ -181,7 +181,7 @@ projects.forEach(project => {
     }, 200);
   });
 
-  // 👉 ключевая часть — отслеживаем сам попап
+  //отслеживаем сам попап
   marker.on('popupopen', function () {
     const popupEl = document.querySelector('.leaflet-popup');
 
